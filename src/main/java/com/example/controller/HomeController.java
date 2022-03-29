@@ -53,4 +53,16 @@ public class HomeController {
 
         return "home";
     }
+
+    @GetMapping("/secure")
+    public String getSecure(final Model model) {
+        return "secure";
+    }
+
+    @GetMapping("/admin")
+    public String getAdmin(final Model model) {
+        return "admin";
+    }
+
+
 }

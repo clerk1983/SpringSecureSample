@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
   <head>
     <meta charset="UTF-8"/>
     <title>ログイン</title>
@@ -22,6 +23,9 @@
         class="text-danger">
         ログインエラーメッセージ
       </p>
+      <div sec:authorize="isAuthenticated() && isFullyAuthenticated() == false">
+       <h2>ログイン情報を入力してください</h2>
+      </div>
     </form>
   </body>
 </html>

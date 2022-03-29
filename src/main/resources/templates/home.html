@@ -15,6 +15,10 @@
     <p>メール：<span sec:authentication="principal.mailAddress"></span></p>
     <p>ロール:<span sec:authentication="principal.authorities"></span></p>
 
+    <div>
+      <a th:href="@{/secure}">secureページ</a><br>
+      <a th:href="@{/admin}">adminページ</a>
+    </div>
     <!-- ログアウト -->
     <form method="post" th:action="@{/logout}">
       <button type="submit">ログアウト</button>

@@ -45,9 +45,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        // ROLE_ADMIN かつ 要ログイン
+        final String ADMIN_ACCESS = "hasAuthority('ROLE_ADMIN') and isFullyAuthenticated()";
+
         // 直リンクの禁止＆ログイン不要ページの設定
         http
             .authorizeRequests()
+                .antMatchers("/secure").fullyAuthenticated() // 要ログイン
+                .antMatchers("/admin").access(ADMIN_ACCESS) // Admin
                 .antMatchers("/login").permitAll() // ログインページは直リンクOK
                 .antMatchers("/error/session").permitAll() // セッションエラー
                 .anyRequest().authenticated(); //それ以外は直リンク禁止
@@ -72,7 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/login?error") //ログイン失敗時の遷移先
                 .usernameParameter("userId") //ログインページのユーザーID
                 .passwordParameter("password") //ログインページのパスワード
-                .defaultSuccessUrl("/home", true) //ログイン成功後の遷移先
+                .defaultSuccessUrl("/home", false) //ログイン成功後の遷移先 false:-> 元の直前の画面へ
                 .successHandler(successHandler); // SuccessHandlerの設定
 
         // ログアウト処理
