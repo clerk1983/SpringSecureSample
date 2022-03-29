@@ -17,17 +17,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HomeController {
 
+    // @AuthenticationPrincipal
     @GetMapping("/home")
     public String getHome(Model model,
             @AuthenticationPrincipal AppUserDetails user) {
 
         log.info("HomeController Start");
-
         // ログインユーザー情報の表示
         log.info(user.toString());
-
         log.info("HomeController End");
-
         return "home";
     }
 
