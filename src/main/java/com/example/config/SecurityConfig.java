@@ -83,6 +83,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login")
                 .deleteCookies("JSESSIONID"); // 指定しないとセッションエラー扱い
 
+
+        // RememberMe設定
+        http
+            .rememberMe()
+                .key("uniqueKeyAndSecret") // トークン識別キー
+                .rememberMeParameter("remember-me") // checkboxのname属性
+                .rememberMeCookieName("remember-me") // Cookie名
+                .tokenValiditySeconds(24 * 60 * 60) // 有効期限（秒)
+                .useSecureCookie(true); // HTTPSのみ許可
+
     }
 
     @Override

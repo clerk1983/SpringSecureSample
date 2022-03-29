@@ -12,6 +12,9 @@
       <label>パスワード：</label>
       <input type="password" name="password" /><br>
       <br>
+      <label>ログインしたままにする:</label>
+      <input type="checkbox" name="remember-me">
+      <br>
       <input type="submit" value="ログイン" /><br>
       <br>
       <p th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']} != null"
