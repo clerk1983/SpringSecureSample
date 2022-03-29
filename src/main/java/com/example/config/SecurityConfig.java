@@ -48,7 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // 直リンクの禁止＆ログイン不要ページの設定
         http
             .authorizeRequests()
-                .antMatchers("/login").permitAll() //ログインページは直リンクOK
+                .antMatchers("/login").permitAll() // ログインページは直リンクOK
+                .antMatchers("/error/session").permitAll() // セッションエラー
                 .anyRequest().authenticated(); //それ以外は直リンク禁止
 
         // レスポンスヘッダの設定
@@ -58,6 +59,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // HTTPSにリダイレクト
         http
             .requiresChannel().antMatchers("/login*").requiresSecure();
+
+        // セッション管理
+        http
+            .sessionManagement().invalidSessionUrl("/error/session");
 
         //ログイン処理の実装
         http
@@ -75,7 +80,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login");
+                .logoutSuccessUrl("/login")
+                .deleteCookies("JSESSIONID"); // 指定しないとセッションエラー扱い
 
     }
 
