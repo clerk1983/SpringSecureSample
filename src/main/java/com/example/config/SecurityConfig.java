@@ -51,6 +51,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll() //ログインページは直リンクOK
                 .anyRequest().authenticated(); //それ以外は直リンク禁止
 
+        // レスポンスヘッダの設定
+        http
+            .headers().contentSecurityPolicy("default-src 'self'");
+
         // HTTPSにリダイレクト
         http
             .requiresChannel().antMatchers("/login*").requiresSecure();
