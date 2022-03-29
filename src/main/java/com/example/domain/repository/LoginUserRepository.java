@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import com.example.domain.model.AppUserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class LoginUserRepository {
@@ -40,6 +41,16 @@ public class LoginUserRepository {
             + "   user_role.role_id = role.role_id"
             + " WHERE m_user.user_id = ?";
 
+    /** パスワードと期限を更新するSQL */
+    private static final String UPDATE_PASSWORD_SQL =
+            """ 
+                update M_USER set
+                 PASSWORD = ?,
+                 PASS_UPDATE_DATE = ?
+                where USER_ID = ? 
+            """;
+
+
     /**
      * ユーザー情報を取得して、UserDetailsを生成するメソッド.
      */
@@ -47,10 +58,8 @@ public class LoginUserRepository {
 
         //select実行(ユーザーの取得)
         Map<String, Object> userMap = jdbc.queryForMap(SELECT_USER_SQL, userId);
-
         //権限リストの取得（メソッド）
         List<GrantedAuthority> grantedAuthorityList = getRoleList(userId);
-
         // 結果返却用のUserDetailsを生成
         return buildUserDetails(userMap, grantedAuthorityList);
     }
@@ -61,11 +70,11 @@ public class LoginUserRepository {
     private List<GrantedAuthority> getRoleList(String userId) {
 
         //select実行(ユーザー権限の取得)
-        List<Map<String, Object>> authorityList =
+        final List<Map<String, Object>> authorityList =
                 jdbc.queryForList(SELECT_USER_ROLE_SQL, userId);
 
         //結果返却用のList生成
-        List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
+        final List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
 
         for(Map<String, Object> map: authorityList) {
 
@@ -115,5 +124,16 @@ public class LoginUserRepository {
                 .mailAddress(mailAddress)
                 .authority(grantedAuthorityList)
                 .build();
+    }
+
+    /**
+     * パスワードと期限を更新
+     */
+    @Transactional
+    public int updatePassword(final String userId,
+                              final String password,
+                              final Date passwordUpdateDate) {
+
+        return jdbc.update(UPDATE_PASSWORD_SQL, password, passwordUpdateDate, userId);
     }
 }

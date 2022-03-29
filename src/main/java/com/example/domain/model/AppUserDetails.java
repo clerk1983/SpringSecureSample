@@ -74,18 +74,11 @@ public class AppUserDetails implements UserDetails {
         return this.unlock;
     }
 
-    /** パスワードの有効期限チェック
-     * true:有効
-     * false:無効
-     */
     @Override
     public boolean isCredentialsNonExpired() {
-
-        //パスワード有効期限が、現在日付よりも後かどうかをチェック
-        //現在日付よりも後なら有効
-        //現在日付よりも前なら無効
-        return this.passUpdateDate.after(new Date());
+        return true;
     }
+
 
     /** アカウントの有効・無効チェック
      * true:有効
